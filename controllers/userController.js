@@ -177,11 +177,40 @@ export const login = async(req,res) =>{
 
         })
     } catch (error) {
-        res.status(500)({
+        return res.status(500).json({
             success:false,
             message:error.message
         })
         
+    }
+}
+
+export const logout =async (req, res)=>{
+    try {
+        const userId = req.id
+        await Session.deleteMany({userId:userId})
+        await User.findByIdAndUpdate(userId, {isLoggedIn:false})
+        return res.status(200).json({
+            success:true,
+            message:'user logged out successfully'
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}
+
+export const forgotPassword =async(req,res) => {
+    try {
+        const {email}=req.body
+        const user = await User.findOne
+    } catch (error) {
+        return res.json(500).json({
+            success:false,
+            message:error.message
+        })
     }
 }
 
