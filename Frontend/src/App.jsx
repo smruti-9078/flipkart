@@ -4,6 +4,9 @@ import Home from './pages/Home'
 import Navbar from './components/Navbar'
 import Signup from './pages/Signup'
 import Login from './pages/Login'
+import Verify from './pages/Verify'
+import VeryfyEmail from './pages/VerifyEmail'
+import VerifyEmail from './pages/VerifyEmail'
 
 
 const router = createBrowserRouter([
@@ -13,12 +16,21 @@ const router = createBrowserRouter([
   },
   {
     path: "/signup",
-    element:<Signup />
+    element:<><Signup /></>
   },
   {
     path: "/login",
-    element:<Login />
+    element:<><Login /></>
   },
+  {
+    path: "/verify",
+    element:<><Verify /></>
+  },
+  {
+    path: "/verify/:token",
+    element:<><VerifyEmail/></>
+  },
+
   
 ])
 

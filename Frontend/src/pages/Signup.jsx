@@ -11,14 +11,16 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 
 const Signup = () => {
     const [showPassword, setShowPassword] = useState(false)
+    const [loading, setLoading] =useState(false)
     const [formData, setFormData] = useState({
+        
         firstName:"",
         lastName:"",
         email:"",
@@ -38,7 +40,9 @@ const Signup = () => {
         e.preventDefault();
         //console.log(formData)
         try {
-            const res= await axios.post(`http://localhost:8000/api/user/register`, formData,{
+          setLoading(true)
+            const res= await axios.post(`http://localhost:8000/api/user/register`, formData, {
+            
                 headers:{
                     "Content-Type":"application/json"
                 }
@@ -49,14 +53,17 @@ const Signup = () => {
             }
         } catch (error) {
             console.log(error)
+            toast.error(error.response.data.message)
+        }finally{
+          setLoading(false)
         }
     }
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-600 to-purple-600 ">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-center">Create your account</CardTitle>
-          <CardDescription className="text-center">
+          <CardTitle className="text-center text-blue-600 text-2xl font-semibold ">Create your account</CardTitle>
+          <CardDescription className="text-center text-slate-600 ">
             Enter given details to create your account 
           </CardDescription>
         </CardHeader>
@@ -64,7 +71,7 @@ const Signup = () => {
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-2">
                 <div className="grid gap-2">
-                    <Label htmlFor="firstName">First Name</Label>
+                    <Label htmlFor="firstName" className='text-gray-600'>First Name</Label>
                     <Input id="firstName" 
                     placeholder="First Name"
                     name="firstName"
@@ -75,7 +82,7 @@ const Signup = () => {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="lastName">Last Name</Label>
+                    <Label htmlFor="lastName"className='text-gray-600'>Last Name</Label>
                     <Input id="lastName" 
                     placeholder="Last Name"
                     name="lastName"
@@ -88,7 +95,7 @@ const Signup = () => {
                 
               </div> 
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className='text-gray-600'>Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -102,7 +109,7 @@ const Signup = () => {
               
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password"className='text-gray-600'>Password</Label>
                   
                 </div>
                 <div className="relative">
@@ -117,7 +124,7 @@ const Signup = () => {
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <Button onClick={submitHandler} type="submit" className="w-full bg-blue-600 hover:bg-blue-800">
-            Sign up
+            {loading? <><Loader2 className="animate-spin h-4 w-4 mr-2"/>Please wait</>:'Signup'}
           </Button>
           <p className="text-slate-800 text-md">Already have an account ? <Link to={'/login'} className="hover:underline cursor-pointer text-blue-800">Login</Link></p>
         </CardFooter>
