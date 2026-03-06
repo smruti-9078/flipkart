@@ -7,12 +7,13 @@ import Login from './pages/Login'
 import Verify from './pages/Verify'
 import VeryfyEmail from './pages/VerifyEmail'
 import VerifyEmail from './pages/VerifyEmail'
+import Footer from './components/Footer/Footer.jsx'
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element:<><Navbar/><Home/></>
+    element:<><Navbar/><Home/><Footer/></>
   },
   {
     path: "/signup",

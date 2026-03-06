@@ -1,9 +1,17 @@
 import React from 'react'
+import Hero from '../components/Hero.jsx'
+import Features from '@/components/Features.jsx'
+import BrandSlider from '@/components/BrandComponents/BrandSlider.jsx'
+
 
 const Home = () => {
   return (
     <div>
-      <h1>Home</h1>
+      <Hero/>
+      <Features/>
+      <h2>Our Brands</h2>
+      <BrandSlider/>
+      
     </div>
   )
 }
