@@ -16,6 +16,8 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/userSlice";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -27,6 +29,7 @@ const Login = () => {
         password:""
     })
     const navigate = useNavigate()
+    const dispatch =useDispatch()
 
     const handleChange = (e)=>{
         const {name, value} = e.target;
@@ -48,8 +51,11 @@ const Login = () => {
                 }
             })
             if(res.data.success){
-                navigate('/')
+              localStorage.setItem("accessToken", res.data.accessToken)
+                
+                dispatch(setUser(res.data.user))
                 toast.success(res.data.message)
+                navigate('/')
             }
         } catch (error) {
             console.log(error)
@@ -70,31 +76,7 @@ const Login = () => {
         </CardHeader>
         <CardContent>
             <div className="flex flex-col gap-3">
-              {/* <div className="grid grid-cols-2 gap-2">
-                 <div className="grid gap-2">
-                    <Label htmlFor="firstName" className='text-gray-600'>First Name</Label>
-                    <Input id="firstName" 
-                    placeholder="First Name"
-                    name="firstName"
-                    type='text'
-                    required 
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="lastName"className='text-gray-600'>Last Name</Label>
-                    <Input id="lastName" 
-                    placeholder="Last Name"
-                    name="lastName"
-                    type='text'
-                    required
-                    value={formData.lastName}
-                    onChange={handleChange} 
-                    />
-                </div> 
-                
-               </div>*/}
+               
               <div className="grid gap-2">
                 <Label htmlFor="email" className='text-gray-600'>Email</Label>
                 <Input

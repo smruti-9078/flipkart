@@ -2,9 +2,37 @@ import { ShoppingCart,Search } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
+import axios from "axios";
+import { toast } from "sonner";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "@/redux/userSlice";
 
 const Navbar = () => {
-  const user = true;
+  const { user } = useSelector((store)=>store.user)
+  console.log(user)
+  
+  const accessToken =localStorage.getItem("accessToken")
+  const dispatch = useDispatch()
+  const logoutHandler = async()=>{
+    try {
+      const res = await axios.post(`http://localhost:8000/api/user/logout`,{},{
+        headers:{
+          Authorization:`Bearer ${accessToken}`
+        }
+      })
+      if (res.data.success){
+        dispatch(setUser(null))
+        toast.success(res.data.message)
+        
+        
+        
+      }
+    } catch (error) {
+        console.log(error)
+      
+    }
+
+  }
   return (
     <header className="bg-slate-900 fixed w-full z-20  text-white p-2">
       <div className="max-w-7xl mx-auto flex justify-between items-center py-3">
@@ -23,26 +51,16 @@ const Navbar = () => {
         </div>
         <nav className="flex gap-10 justify-between items-center">
           <ul className="flex gap-7 items-center text-xl font-semibold">
-            <Link
-              to={"/"}
-              className="hover:text-gray-300 transition-colors duration-300"
-            >
-              Home
-            </Link>
-            <Link
-              to={"/products"}
-              className="hover:text-gray-300 transition-colors duration-300"
-            >
-              Products
-            </Link>
-            {user && (
+            <Link to={"/"} className="hover:text-gray-300 transition-colors duration-300">Home</Link>
+            <Link to={"/products"} className="hover:text-gray-300 transition-colors duration-300">Products</Link>
+            {user && 
               <Link
-                to={"/profile"}
-                className="hover:text-gray-300 transition-colors duration-300"
-              >
-                Hello User
+                to={"/profile"}>
+                
+                <li>Hello, {user.firstName}</li>
               </Link>
-            )}
+              }   
+            
           </ul>
           <Link to={`/cart`} className="relative">
             <ShoppingCart />
@@ -51,7 +69,7 @@ const Navbar = () => {
             </span>
           </Link>
           {user ? (
-            <Button className="bg-blue-600 text-white cursor-pointer">
+            <Button onClick={logoutHandler} className="bg-blue-600 text-white cursor-pointer">
               Logout
             </Button>
           ) : (
