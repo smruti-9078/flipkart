@@ -1,6 +1,6 @@
 import { ShoppingCart,Search } from "lucide-react";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import axios from "axios";
 import { toast } from "sonner";
@@ -13,6 +13,8 @@ const Navbar = () => {
   
   const accessToken =localStorage.getItem("accessToken")
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const logoutHandler = async()=>{
     try {
       const res = await axios.post(`http://localhost:8000/api/user/logout`,{},{
@@ -73,7 +75,7 @@ const Navbar = () => {
               Logout
             </Button>
           ) : (
-            <Button className="bg-blue-600 text-white cursor-pointer">
+            <Button onClick={()=>navigate(`login`)}className="bg-blue-600 text-white cursor-pointer">
               Login
             </Button>
           )}
