@@ -57,7 +57,7 @@ const Navbar = () => {
             <Link to={"/products"} className="hover:text-gray-300 transition-colors duration-300">Products</Link>
             {user && 
               <Link
-                to={"/profile"}>
+                to={`/profile/${user._id}`}>
                 
                 <li>Hello, {user.firstName}</li>
               </Link>
