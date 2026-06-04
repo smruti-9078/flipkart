@@ -25,7 +25,7 @@ export  const isAuthenticated = async(req, res, next) =>{
             }
             return res.status(400).json({
                 success:false,
-                message:'Access tokken is missing or invalid'
+                message:'Access token is missing or invalid'
             })
         }
         const user = await User.findById(decoded.id)

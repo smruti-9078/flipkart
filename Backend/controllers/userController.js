@@ -374,10 +374,10 @@ export const getUserById = async(req, res)=>{
 } 
 export const updateUser = async(req, res)=>{
     try{
-        const userIdToUpdate =req.params.id
-        const loggedInUser = req.user
+        const userIdToUpdate =req.params.id;
+        const loggedInUser = req.user;
 
-        const {firstName, lastName, city,zipcode, phoneNo,role} = req.body
+        const {firstName, lastName, address, city, zipCode, phoneNo, role} = req.body
         if(loggedInUser._id.toString() !== userIdToUpdate && loggedInUser.role !=='admin')
         {
             return res.status(403).json({
@@ -404,24 +404,28 @@ export const updateUser = async(req, res)=>{
                 const stream = cloudinary.uploader.upload_stream(
                     {folder:"profiles"},
                     (error, result)=>{
-                        if(error) reject(error)
-                            else resolve(result)
+                        if(error) {
+                            reject(error)
+                        }
+                        else { 
+                            resolve(result)
+                        }
                     }
 
                 )
                 stream.end(req.file.buffer)
             })
-            profilePicUrl = uploadResult.secure_Url;
+            profilePicUrl = uploadResult.secure_url;
             profilePicPublicId = uploadResult.public_id;
         }
 
         user.firstName = firstName || user.firstName;
         user.lastName = lastName || user.lastName;
-        user.address = adress || user.address;
+        user.address = address || user.address;
         user.city = city || user.city;
-        user.zipcode = zipcode || user.zipcode;
+        user.zipCode = zipCode || user.zipCode;
         user.phoneNo = phoneNo || user.phoneNo;
-        user.role = role ;
+        user.role = role || user.role;
         user.profilePic = profilePicUrl;
         user.profilePicPublicId = profilePicPublicId;
 
@@ -434,6 +438,7 @@ export const updateUser = async(req, res)=>{
 
 }
     catch (error) {
+        console.log(error);
         return res.status(500).json({
             success:false,
             message:error.message
