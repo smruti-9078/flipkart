@@ -8,7 +8,7 @@ import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
     try {
-        const {firstName, lastName, email, password } = req.body;
+        const {firstName, lastName, email, password, role } = req.body;
         if(!firstName || !lastName || !email || !password) {
              return res.status(400).json({
                 success:false,
@@ -24,11 +24,15 @@ export const register = async (req, res) => {
             });
         }
         const hashedPassword =await bcrypt.hash(password,10)
+        const allowedRoles = ["user", "admin"];
+        const userRole = allowedRoles.includes(role) ? role : "user";
+        console.log("User role:", userRole); // Debugging line to check the role value
         const newUser = await User.create({
             firstName,
             lastName,
             email,
-            password:hashedPassword
+            password:hashedPassword,
+            role: userRole
 
         })
         const token =jwt.sign({id:newUser._id},process.env.SECRET_KEY, {expiresIn:'10m'})
@@ -445,6 +449,8 @@ export const updateUser = async(req, res)=>{
         })
     }
 }
+
+
 
 
 
