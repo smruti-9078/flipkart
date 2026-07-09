@@ -24,7 +24,8 @@ const Signup = () => {
         firstName:"",
         lastName:"",
         email:"",
-        password:""
+        password:"",
+        role:"admin"
     })
     const navigate = useNavigate()
 
@@ -119,6 +120,20 @@ const Signup = () => {
                 }
                 </div>
                 
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="role" className='text-gray-600'>Role</Label>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
               </div>
             </div>
         </CardContent>

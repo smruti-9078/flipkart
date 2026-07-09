@@ -9,31 +9,36 @@ import { setUser } from "@/redux/userSlice";
 
 const Navbar = () => {
   const { user } = useSelector((store)=>store.user)
-  console.log(user)
-  
-  const accessToken =localStorage.getItem("accessToken")
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const logoutHandler = async()=>{
+  const logoutHandler = async () => {
     try {
-      const res = await axios.post(`http://localhost:8000/api/user/logout`,{},{
-        headers:{
-          Authorization:`Bearer ${accessToken}`
+      const accessToken = localStorage.getItem("accessToken")
+
+      if (accessToken) {
+        const res = await axios.post(
+          `http://localhost:8000/api/user/logout`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+
+        if (res.data.success) {
+          toast.success(res.data.message)
         }
-      })
-      if (res.data.success){
-        dispatch(setUser(null))
-        toast.success(res.data.message)
-        
-        
-        
       }
     } catch (error) {
-        console.log(error)
-      
+      console.log(error)
+      toast.error("Logout failed, but your session was cleared locally")
+    } finally {
+      localStorage.removeItem("accessToken")
+      dispatch(setUser(null))
+      navigate("/login")
     }
-
   }
   return (
     <header className="bg-slate-900 fixed w-full z-20  text-white p-2">
