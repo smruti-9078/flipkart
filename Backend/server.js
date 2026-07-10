@@ -4,6 +4,7 @@ import connectDB from './database/db.js'
 import userRoute from './routes/userRoute.js'
 
 import productRouter from './routes/productRoute.js'
+import cartRoute from './routes/cartRoute.js'
 import cors from 'cors'
 
 
@@ -24,6 +25,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/user',userRoute)
 
 app.use('/api/product',productRouter)
+
+app.use('/api/cart',cartRoute)
 
 // http://localhost:8000/api/user/register
 
