@@ -25,7 +25,7 @@ const Signup = () => {
         lastName:"",
         email:"",
         password:"",
-        role:""
+        role:"user"
     })
     const navigate = useNavigate()
 
