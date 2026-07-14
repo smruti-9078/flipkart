@@ -32,36 +32,34 @@ const Products = () => {
 
   const dispatch = useDispatch();
 
-  const getAllProducts = async () => {
-    try {
-      setLoading(true);
-
-      const response = await axios.get(
-        "http://localhost:8000/api/product/all-products"
-      );
-      console.log(response.data)
-      //console.log(allProducts)
-
-      if (response.data.success) {
-        setAllProducts(response.data.products);
-        dispatch(setProducts(response.data.products));
-        console.log("Products loaded:", response.data.products);
-        
-      }
-    } catch (error) {
-      console.log(error);
-
-      toast.error(
-        error.response?.data?.message || "Failed to fetch products"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const getAllProducts = async () => {
+      try {
+        setLoading(true);
+
+        const response = await axios.get(
+          "http://localhost:8000/api/product/all-products"
+        );
+        console.log(response.data);
+
+        if (response.data.success) {
+          setAllProducts(response.data.products);
+          dispatch(setProducts(response.data.products));
+          console.log("Products loaded:", response.data.products);
+        }
+      } catch (error) {
+        console.log(error);
+
+        toast.error(
+          error.response?.data?.message || "Failed to fetch products"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
     getAllProducts();
-  },[]);
+  }, [dispatch]);
 
   // Filter + Sort
   const filteredAndSortedProducts = useMemo(() => {

@@ -9,6 +9,7 @@ import { setUser } from "@/redux/userSlice";
 
 const Navbar = () => {
   const { user } = useSelector((store)=>store.user)
+  const  {cart} = useSelector(store=>store.product)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -40,6 +41,7 @@ const Navbar = () => {
       navigate("/login")
     }
   }
+  //console.log(cart)
   return (
     <header className="bg-slate-900 fixed w-full z-20  text-white p-2">
       <div className="max-w-7xl mx-auto flex justify-between items-center py-3">
@@ -72,7 +74,7 @@ const Navbar = () => {
           <Link to={`/cart`} className="relative">
             <ShoppingCart />
             <span className="bg-red-500 rounded-full absolute text-white -top-3 -right-5 px-2">
-              0
+              {cart?.items?.length}
             </span>
           </Link>
           {user ? (
