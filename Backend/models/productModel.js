@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema(
             type:String,
             required:true
         },
-        productImg:{
+        productImg:[{
             url:{
                 type:String,
                 required:true
@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema(
                 type:String,
                 required:true
             }
-        },
+        }],
         productPrice:{
             type:Number
         },
