@@ -39,6 +39,11 @@ const AddProduct = () => {
     const next = files.map((file) => ({ file, preview: URL.createObjectURL(file) }));
     setImages(next);
   };
+  const handleRemoveImage = (index) => {
+  setImages((prevImages) =>
+    prevImages.filter((_, i) => i !== index)
+  );
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -203,7 +208,7 @@ const AddProduct = () => {
           <div>
             <label className="block font-medium mb-3">Product Images</label>
 
-            <label className="border-2 border-dashed rounded-xl h-52 flex flex-col justify-center items-center cursor-pointer hover:border-blue-500 transition">
+            <label className="relative border-2 border-dashed rounded-xl h-52 flex flex-col justify-center items-center cursor-pointer hover:border-blue-500 transition">
               <UploadCloud size={45} className="text-blue-600" />
 
               <p className="mt-3 text-gray-600">Click to upload images</p>
@@ -213,14 +218,22 @@ const AddProduct = () => {
 
             {/* Preview */}
             {images.length > 0 && (
-              <div className="grid grid-cols-5 gap-4 mt-5">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-5">
                 {images.map((imgObj, index) => (
-                  <img
-                    key={index}
-                    src={imgObj.preview}
-                    alt={formData.productName || `preview-${index}`}
-                    className="h-28 w-full object-cover rounded-lg border"
-                  />
+                  <div key={index} className="relative overflow-hidden rounded-lg border">
+                    <img
+                      src={imgObj.preview}
+                      alt={formData.productName || `preview-${index}`}
+                      className="h-28 w-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-red-600 transition"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 ))}
               </div>
             )}
