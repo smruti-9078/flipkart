@@ -21,6 +21,7 @@ const AddProduct = () => {
   // images: array of { file: File, preview: string }
   const [images, setImages] = useState([]);
 
+
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -39,6 +40,7 @@ const AddProduct = () => {
     const next = files.map((file) => ({ file, preview: URL.createObjectURL(file) }));
     setImages(next);
   };
+  
   const handleRemoveImage = (index) => {
   setImages((prevImages) =>
     prevImages.filter((_, i) => i !== index)

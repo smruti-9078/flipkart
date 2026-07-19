@@ -1,42 +1,75 @@
-import React, { useState} from 'react'
-import { useSelector } from 'react-redux';
-import { Search, Pencil, Trash2 } from 'lucide-react';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Search, Pencil, Trash2, Trash } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import axios from "axios";
+import { setProducts } from "@/redux/productsSlice";
+
 
 const AdminProduct = () => {
-    const { products } = useSelector((store) => store.product);
+  const { products } = useSelector((store) => store.product);
 
   const [search, setSearch] = useState("");
+  const dispatch = useDispatch()
+  const accessToken =localStorage.getItem("accessToken")
+  const navigate = useNavigate();
+  
 
   const filteredProducts = products.filter(
     (product) =>
       product.productName.toLowerCase().includes(search.toLowerCase()) ||
       product.category.toLowerCase().includes(search.toLowerCase()) ||
-      product.brand.toLowerCase().includes(search.toLowerCase())
+      product.brand.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const handleDelete = (id) => {
-    console.log("Delete Product:", id);
-    // Delete API Call
+  const handleDelete = async(id) => {
+    try {
+      const confirmDelete = window.confirm("Are you sure you want to delete this product?")
+      if(!confirmDelete) return;
+
+      const res = await axios.delete(
+      `http://localhost:8000/api/product/delete/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    if (res.data.success) {
+      toast.success(res.data.message);
+
+      dispatch(
+        setProducts(
+          products.filter((product) => product._id !== id)
+        )
+      );
+    }
+      
+    } catch (error) {
+
+      console.log(error);
+
+    toast.error(
+      error.response?.data?.message || "Failed to delete product"
+    )
+    }
   };
 
   const handleEdit = (id) => {
-    console.log("Edit Product:", id);
-    // Navigate to Edit Product Page
+    //console.log("Edit Product:", id);
+    navigate(`/dashboard/edit-product/${id}`)
+     
   };
 
   return (
     <div className="min-h-screen bg-slate-50 p-15">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-800">
-          Products
-        </h2>
+        <h2 className="text-3xl font-bold text-gray-800">Products</h2>
 
         <div className="relative w-80">
-          <Search
-            size={20}
-            className="absolute left-3 top-3 text-gray-400"
-          />
+          <Search size={20} className="absolute left-3 top-3 text-gray-400" />
 
           <input
             type="text"
@@ -50,9 +83,7 @@ const AdminProduct = () => {
 
       {/* Table */}
       <div className="bg-white rounded-xl shadow overflow-hidden">
-
         <table className="w-full">
-
           <thead className="bg-blue-600 text-white">
             <tr>
               <th className="p-4 text-left">Image</th>
@@ -60,7 +91,6 @@ const AdminProduct = () => {
               <th className="p-4 text-left">Category</th>
               <th className="p-4 text-left">Brand</th>
               <th className="p-4 text-left">Price</th>
-              <th className="p-4 text-left">Stock</th>
               <th className="p-4 text-center">Actions</th>
             </tr>
           </thead>
@@ -80,64 +110,48 @@ const AdminProduct = () => {
                     />
                   </td>
 
-                  <td className="p-4 font-semibold">
-                    {product.productName}
-                  </td>
+                  <td className="p-4 font-semibold">{product.productName}</td>
 
-                  <td className="p-4">
-                    {product.category}
-                  </td>
+                  <td className="p-4">{product.category}</td>
 
-                  <td className="p-4">
-                    {product.brand}
-                  </td>
+                  <td className="p-4">{product.brand}</td>
 
                   <td className="p-4 font-semibold text-blue-600">
                     ₹{product.productPrice}
                   </td>
 
                   <td className="p-4">
-                    {product.stock}
-                  </td>
-
-                  <td className="p-4">
-                    <div className="flex justify-center gap-3">
-
+                    <div className="flex justify-between gap-3">
+                      
                       <button
                         onClick={() => handleEdit(product._id)}
-                        className="bg-blue-100 text-blue-600 p-2 rounded-lg hover:bg-blue-600 hover:text-white transition"
+                        className="bg-red-100 text-red-600 p-2 rounded-lg hover:bg-red-600 hover:text-white transition"
                       >
                         <Pencil size={18} />
-                      </button>
-
+                        </button>
+                        
                       <button
                         onClick={() => handleDelete(product._id)}
                         className="bg-red-100 text-red-600 p-2 rounded-lg hover:bg-red-600 hover:text-white transition"
                       >
                         <Trash2 size={18} />
                       </button>
-
                     </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td
-                  colSpan={7}
-                  className="text-center py-10 text-gray-500"
-                >
+                <td colSpan={7} className="text-center py-10 text-gray-500">
                   No Products Found
                 </td>
               </tr>
             )}
           </tbody>
-
         </table>
-
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AdminProduct
+export default AdminProduct;

@@ -1,112 +1,161 @@
-import React from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Home from './pages/Home'
-import Navbar from './components/Navbar'
-import Signup from './pages/Signup'
-import Login from './pages/Login'
-import Verify from './pages/Verify'
-import VerifyEmail from './pages/VerifyEmail'
-import Footer from './components/Footer/Footer.jsx'
-import Profile from './pages/Profile'
-import Products from './pages/Products'
-import Cart from './pages/Cart'
-import Dashboard from './pages/Dashboard'
-import AdminSales from './pages/admin/AdminSales'
-import AdminProduct from './pages/admin/AdminProduct'
-import AddProduct from './pages/admin/AddProduct'
-import AdminOrders from './pages/admin/AdminOrders'
-import ShowUserOrders from './pages/admin/ShowUserOrders'
-import AdminUsers from './pages/admin/AdminUsers.jsx'
-import UserInfo from './pages/admin/UserInfo'
-import ProtectedRoute from './components/ProtectedRoute'
-import SingleProduct from './pages/SingleProduct'
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/Home";
+import Navbar from "./components/Navbar";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import Verify from "./pages/Verify";
+import VerifyEmail from "./pages/VerifyEmail";
+import Footer from "./components/Footer/Footer.jsx";
+import Profile from "./pages/Profile";
+import Products from "./pages/Products";
+import Cart from "./pages/Cart";
+import Dashboard from "./pages/Dashboard";
+import AdminSales from "./pages/admin/AdminSales";
+import AdminProduct from "./pages/admin/AdminProduct";
+import AddProduct from "./pages/admin/AddProduct";
+import AdminOrders from "./pages/admin/AdminOrders";
+import ShowUserOrders from "./pages/admin/ShowUserOrders";
+import AdminUsers from "./pages/admin/AdminUsers.jsx";
+import UserInfo from "./pages/admin/UserInfo";
+import ProtectedRoute from "./components/ProtectedRoute";
+import SingleProduct from "./pages/SingleProduct";
+import EditProduct from "./pages/admin/EditProduct";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element:<><Navbar/><Home/><Footer/></>
+    element: (
+      <>
+        <Navbar />
+        <Home />
+        <Footer />
+      </>
+    ),
   },
   {
     path: "/signup",
-    element:<><Signup /></>
+    element: (
+      <>
+        <Signup />
+      </>
+    ),
   },
   {
     path: "/login",
-    element:<><Login /></>
+    element: (
+      <>
+        <Login />
+      </>
+    ),
   },
   {
     path: "/verify",
-    element:<><Verify /></>
+    element: (
+      <>
+        <Verify />
+      </>
+    ),
   },
   {
     path: "/verify/:token",
-    element:<><VerifyEmail/></>
+    element: (
+      <>
+        <VerifyEmail />
+      </>
+    ),
   },
   {
     path: "/profile/:id",
-    element:<ProtectedRoute><Navbar/><Profile/><Footer/></ProtectedRoute>
+    element: (
+      <ProtectedRoute>
+        <Navbar />
+        <Profile />
+        <Footer />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/products",
-    element:<><Navbar/><Products/><Footer/></>
+    element: (
+      <>
+        <Navbar />
+        <Products />
+        <Footer />
+      </>
+    ),
   },
   {
     path: "/products/:id",
-    element:<><Navbar/><SingleProduct/></>
+    element: (
+      <>
+        <Navbar />
+        <SingleProduct />
+      </>
+    ),
   },
   {
     path: "/cart",
-    element:<ProtectedRoute><Navbar/><Cart/></ProtectedRoute>
+    element: (
+      <ProtectedRoute>
+        <Navbar />
+        <Cart />
+      </ProtectedRoute>
+    ),
   },
-  
+
   {
     path: "/dashboard",
-    element:<ProtectedRoute adminOnly={true}><Navbar/><Dashboard/></ProtectedRoute>,
-    children :[
+    element: (
+      <ProtectedRoute adminOnly={true}>
+        <Navbar />
+        <Dashboard />
+      </ProtectedRoute>
+    ),
+    children: [
       {
-        path:"sales",
-        element:<AdminSales/> 
+        path: "sales",
+        element: <AdminSales />,
       },
       {
-        path:"add-product",
-        element:<AddProduct/>
+        path: "add-product",
+        element: <AddProduct />,
       },
       {
-        path:"products",
-        element:<AdminProduct/>
+        path: "products",
+        element: <AdminProduct />,
       },
       {
-        path:"orders",
-        element:<AdminOrders/>
+        path: "edit-product/:id",
+        element: <EditProduct />,
+      },
+     
+      {
+        path: "orders",
+        element: <AdminOrders />,
       },
       {
-        path:"users/orders/:userId",
-        element: <ShowUserOrders/>
+        path: "users/orders/:userId",
+        element: <ShowUserOrders />,
       },
       {
-        path:"users",
-        element:<AdminUsers/>
+        path: "users",
+        element: <AdminUsers />,
       },
       {
-        path:"users/:id",
-        element:<UserInfo/>
-      }
-    ]
+        path: "users/:id",
+        element: <UserInfo />,
+      },
+    ],
   },
-
-  
-
-  
-])
+]);
 
 const App = () => {
   return (
     <>
-      <RouterProvider router={router}/>
-
-      
+      <RouterProvider router={router} />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
