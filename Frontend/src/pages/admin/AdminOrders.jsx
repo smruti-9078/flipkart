@@ -9,12 +9,34 @@ const AdminOrders = () => {
 
   const token = localStorage.getItem("accessToken");
 
-  const fetchOrders = async () => {
+  const updateStatus = async (_orderId, status) => {
+    try {
+      const { data } = await axios.put(
+        `http://localhost:8000/api/order/admin/${_orderId}`,
+        { status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        loadOrders();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Status update failed");
+    }
+  };
+
+  const loadOrders = async () => {
     try {
       setLoading(true);
 
       const { data } = await axios.get(
-        "http://localhost:8000/api/cart/",
+        "http://localhost:8000/api/order/admin",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -57,30 +79,8 @@ const AdminOrders = () => {
     }
   };
 
-  const updateStatus = async (_orderId, status) => {
-    try {
-      const { data } = await axios.put(
-        `http://localhost:8000/api/cart/update`,
-        { status },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (data.success) {
-        toast.success(data.message);
-        fetchOrders();
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "Status update failed");
-    }
-  };
-
   useEffect(() => {
-    fetchOrders();
+    loadOrders();
   }, []);
 
   if (loading) {
@@ -116,12 +116,12 @@ const AdminOrders = () => {
                   </h2>
 
                   <p className="text-gray-600">
-                    Customer: {order.user?.firstName}{" "}
-                    {order.user?.lastName}
+                    Customer: {order.userId?.firstName}{" "}
+                    {order.userId?.lastName}
                   </p>
 
                   <p className="text-gray-600">
-                    Email: {order.user?.email}
+                    Email: {order.userId?.email}
                   </p>
 
                   <p className="text-gray-600">
@@ -132,7 +132,7 @@ const AdminOrders = () => {
 
                 <div className="text-right">
                   <h3 className="text-xl font-bold text-green-600">
-                    ₹{order.totalAmount}
+                    ₹{order.totalPrice}
                   </h3>
 
                   <p className="capitalize text-gray-600">
@@ -162,7 +162,7 @@ const AdminOrders = () => {
                   </thead>
 
                   <tbody>
-                    {order.products.map((item, idx) => {
+                    {(order.items ||[]).map((item, idx) => {
                       const productObj = item.product || item.productId || item.product?.product || item.productId?.product || {};
                       const img =
                         productObj?.images?.[0] ||

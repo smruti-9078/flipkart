@@ -105,6 +105,7 @@ const AdminUsers = () => {
                       src={
                         user.profilePicture ||
                         "https://ui-avatars.com/api/?name=User"
+                
                       }
                       alt={user.fullName}
                       className="w-12 h-12 rounded-full object-cover border"

@@ -1,9 +1,53 @@
-import React from 'react'
-import  { useState } from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const ShowUserOrders = () => {
-  const [orders] = useState([]);
-  //const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
+
+  const API = "http://localhost:8000/api/order/";
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+
+      const token = localStorage.getItem("accessToken");
+
+      const { data } = await axios.get(API, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (data.success) {
+        setOrders(data.orders);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || "Failed to load orders");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center bg-gray-100">
+        <div className="text-center">
+          <div className="w-14 h-14 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-lg font-semibold text-gray-600">
+            Loading your orders...
+          </p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">My Orders</h1>
@@ -14,7 +58,7 @@ const ShowUserOrders = () => {
         </div>
       ) : (
         <div className="space-y-8">
-          {orders.map((order) => (
+          {fetchOrders.map((order) => (
             <div
               key={order._id}
               className="bg-white rounded-xl shadow-md border p-6"
@@ -24,9 +68,7 @@ const ShowUserOrders = () => {
                 <div>
                   <p className="font-semibold">
                     Order ID:
-                    <span className="text-gray-600 ml-2">
-                      {order._id}
-                    </span>
+                    <span className="text-gray-600 ml-2">{order._id}</span>
                   </p>
 
                   <p className="mt-2">
@@ -45,8 +87,8 @@ const ShowUserOrders = () => {
                         order.status === "Delivered"
                           ? "text-green-600"
                           : order.status === "Cancelled"
-                          ? "text-red-500"
-                          : "text-yellow-600"
+                            ? "text-red-500"
+                            : "text-yellow-600"
                       }`}
                     >
                       {order.status}
@@ -100,17 +142,14 @@ const ShowUserOrders = () => {
               {/* Shipping Address */}
               {order.shippingAddress && (
                 <div className="mt-6 border-t pt-4">
-                  <h3 className="font-semibold mb-2">
-                    Shipping Address
-                  </h3>
+                  <h3 className="font-semibold mb-2">Shipping Address</h3>
 
                   <p>{order.shippingAddress.fullName}</p>
 
                   <p>{order.shippingAddress.address}</p>
 
                   <p>
-                    {order.shippingAddress.city},{" "}
-                    {order.shippingAddress.state}
+                    {order.shippingAddress.city}, {order.shippingAddress.state}
                   </p>
 
                   <p>
@@ -126,7 +165,7 @@ const ShowUserOrders = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ShowUserOrders
+export default ShowUserOrders;

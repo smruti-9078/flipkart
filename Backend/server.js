@@ -5,6 +5,7 @@ import userRoute from './routes/userRoute.js'
 
 import productRouter from './routes/productRoute.js'
 import cartRoute from './routes/cartRoute.js'
+import orderRoute from './routes/orderRoute.js'
 import cors from 'cors'
 
 
@@ -27,6 +28,8 @@ app.use('/api/user',userRoute)
 app.use('/api/product',productRouter)
 
 app.use('/api/cart',cartRoute)
+
+app.use('/api/order', orderRoute)
 
 // http://localhost:8000/api/user/register
 

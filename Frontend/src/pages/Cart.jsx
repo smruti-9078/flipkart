@@ -58,6 +58,29 @@ const Cart = () => {
     }
   }
 
+  const handlePlaceOrder = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/api/order/place-order",
+        { paymentMethod: "Cash on Delivery" },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (res.data.success) {
+        dispatch(setCart({ items: [], totalPrice: 0 }));
+        toast.success(res.data.message || "Order placed successfully");
+        navigate('/products');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || "Failed to place order");
+    }
+  };
+
   useEffect(() => {
     const loadCart = async () => {
       try {
@@ -139,7 +162,7 @@ const Cart = () => {
                         Apply
                       </Button>
                     </div>
-                    <Button className='w-full bg-blue-600'>Place Order</Button>
+                    <Button onClick={handlePlaceOrder} className='w-full bg-blue-600'>Place Order</Button>
                     <Button variant='outline' className='w-full bg-transparent'>
                       <Link to="/products">Continue Shopping</Link>
                     </Button>
