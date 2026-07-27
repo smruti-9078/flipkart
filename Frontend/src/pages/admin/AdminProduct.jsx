@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Search, Pencil, Trash2, Trash } from "lucide-react";
+import { Search, Trash2, SquarePen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import axios from "axios";
@@ -63,7 +63,7 @@ const AdminProduct = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-15">
+    <div className="min-h-screen bg-slate-50 p-18">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-3xl font-bold text-gray-800">Products</h2>
@@ -125,9 +125,9 @@ const AdminProduct = () => {
                       
                       <button
                         onClick={() => handleEdit(product._id)}
-                        className="bg-red-100 text-red-600 p-2 rounded-lg hover:bg-red-600 hover:text-white transition"
+                        className="bg-slate-100 text-slate-600 p-2 rounded-lg hover:bg-blue-600 hover:text-white transition"
                       >
-                        <Pencil size={18} />
+                        <SquarePen size={18} />
                         </button>
                         
                       <button

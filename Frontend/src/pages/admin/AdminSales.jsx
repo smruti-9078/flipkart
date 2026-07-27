@@ -1,4 +1,4 @@
-import React , { useState }from 'react'
+import React from 'react'
 import {
   DollarSign,
   ShoppingCart,
@@ -8,16 +8,16 @@ import {
 } from "lucide-react";
 const AdminSales = () => {
 
-  const [dashboard, setDashboard] = useState({
+  const dashboard = {
     totalRevenue: 0,
     totalOrders: 0,
     totalUsers: 0,
     totalProducts: 0,
     recentOrders: [],
     topProducts: [],
-  });
+  };
 
-  //const [loading, setLoading] = useState(true);
+// const [loading, setLoading] = useState(true);
   const cards = [
     {
       title: "Total Revenue",

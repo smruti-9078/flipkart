@@ -1,11 +1,15 @@
-import React, {useState} from 'react'
-import { useSelector } from 'react-redux';
+import React, {useState, useEffect} from 'react'
+// removed unused redux selector import
 import { Search, Eye, Trash2 } from 'lucide-react';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const AdminUsers = () => {
-    const { users } = useSelector((store) => store.user);
-
+  const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
+  const navigate = useNavigate()
+  const accessToken=localStorage.getItem("accessToken")
 
   const filteredUsers = users?.filter(
     (user) =>
@@ -14,16 +18,40 @@ const AdminUsers = () => {
   );
 
   const handleView = (id) => {
-    console.log("View User:", id);
-    // Navigate to user details page
+    navigate(`/dashboard/users/${id}`)
   };
 
-  const handleDelete = (id) => {
-    console.log("Delete User:", id);
-    // Delete API Call
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this user?")
+    if(!confirmDelete) return;
+
+    // Deleting users is not implemented on the server yet.
+    // Show a message for now.
+    toast.error("User deletion is not supported by the server.")
   };
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8000/api/user/all-user`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setUsers(res.data.users || []);
+      } catch (error) {
+        console.error(error);
+        toast.error(error.response?.data?.message || "Failed to load users")
+      }
+    }
+
+    fetchUsers()
+  }, [accessToken])
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="min-h-screen bg-slate-50 p-18">
 
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
@@ -60,7 +88,6 @@ const AdminUsers = () => {
               <th className="p-4 text-left">Name</th>
               <th className="p-4 text-left">Email</th>
               <th className="p-4 text-left">Role</th>
-              <th className="p-4 text-left">Status</th>
               <th className="p-4 text-center">Actions</th>
             </tr>
           </thead>
@@ -94,18 +121,6 @@ const AdminUsers = () => {
 
                   <td className="p-4 capitalize">
                     {user.role}
-                  </td>
-
-                  <td className="p-4">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        user.isActive
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {user.isActive ? "Active" : "Inactive"}
-                    </span>
                   </td>
 
                   <td className="p-4">

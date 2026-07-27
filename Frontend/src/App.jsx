@@ -17,7 +17,7 @@ import AddProduct from "./pages/admin/AddProduct";
 import AdminOrders from "./pages/admin/AdminOrders";
 import ShowUserOrders from "./pages/admin/ShowUserOrders";
 import AdminUsers from "./pages/admin/AdminUsers.jsx";
-import UserInfo from "./pages/admin/UserInfo";
+import UserDetails from "./pages/admin/UserDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SingleProduct from "./pages/SingleProduct";
 import EditProduct from "./pages/admin/EditProduct";
@@ -144,7 +144,7 @@ const router = createBrowserRouter([
       },
       {
         path: "users/:id",
-        element: <UserInfo />,
+        element: <UserDetails />,
       },
     ],
   },
